@@ -1,0 +1,10 @@
+version: '2.1'
+services:
+  taky-db:
+    container_name: taky-db
+    image: mariadb
+    ports: 
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=mypass
+    restart: unless-stopped
