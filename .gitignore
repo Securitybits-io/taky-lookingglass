@@ -1,3 +1,6 @@
 certs/*
 ssl/*
 __pycache__*
+ssl/taky-connect.crt
+ssl/taky-connect.key
+ssl/taky-connect.p12
