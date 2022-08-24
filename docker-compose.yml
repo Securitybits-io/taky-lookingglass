@@ -6,5 +6,6 @@ services:
     ports: 
       - 3306:3306
     environment:
-      - MYSQL_ROOT_PASSWORD=mypass
+      - MARIADB_ROOT_PASSWORD=mypass
+      - MARIADB_DATABASE=TAKYCoT
     restart: unless-stopped

@@ -5,7 +5,7 @@ A time series project for Taky in order to have a centralilzed stored CoT Databa
 - [ ] Create a CoT Whitelist to have user input filter the queue
 - [ ] Format and store the COTs in a MariaDB Docker
 - [ ] Create a FIFO Queue for the ingest COTs to handle spikes of data
-- [ ] Create a thread in order to have concurrent PUTs into the SQL DB
+- [x] Create a thread in order to Ingest COTs
 - [ ] Create a Thread for outgoing CoTs
 - [ ] Create environment variables
     - [ ] for whitelist of CoT types
@@ -19,9 +19,8 @@ A time series project for Taky in order to have a centralilzed stored CoT Databa
     - [ ] Configure provisioning in grafana
 - [ ] SQL
     - [ ] Connect function
-    - [ ] Create TAKYCot Database
-    - [ ] Create TAKYCot 
-    - [ ] Create grafana user with password with read only
+    - [x] Create TAKYCot Database
+    - [x] Create grafana user with password with read only
 - [ ] Create a global working docker-compose.yml
 - [ ] Clean up code
 - [ ] Create a README and Documentation
