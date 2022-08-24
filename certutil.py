@@ -5,8 +5,8 @@ import shutil
 from time import sleep
 from OpenSSL import crypto
 
-BOT_CERT_PATH = "/mnt/c/temp/ssl"
-CERT_PATH = "/mnt/c/temp/certs"
+BOT_CERT_PATH = "/home/christoffer/Documents/Development/taky-lookingglass/ssl"
+CERT_PATH = "/home/christoffer/Documents/Development/taky-lookingglass/certs"
 HOSTNAME = "taky-connect"
 
 def make_cert(path, f_name, hostname, cert_pw, cert_auth, n_years=10, dump_pem=False):
