@@ -4,12 +4,11 @@ import os
 import queue
 import socket
 import pymysql
-
-#from matplotlib.pyplot import eventplot
-import certutil
 import ssl
 import xmltodict
+import certutil
 
+from threading import Thread
 from xml.etree import cElementTree as ElementTree
 
 cert_pass = "atakatak"  #TODO ENV

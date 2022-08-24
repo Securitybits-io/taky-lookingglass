@@ -5,6 +5,7 @@ import shutil
 from time import sleep
 from OpenSSL import crypto
 
+#TODO Change to the Docker paths
 BOT_CERT_PATH = "/home/christoffer/Documents/Development/taky-lookingglass/ssl"
 CERT_PATH = "/home/christoffer/Documents/Development/taky-lookingglass/certs"
 HOSTNAME = "taky-connect"
