@@ -8,6 +8,7 @@ import ssl
 import xmltodict
 import certutil
 
+from datetime import datetime
 from queue import Queue
 from threading import Thread
 from xml.etree import cElementTree as ElementTree
@@ -16,39 +17,24 @@ cert_pass = "atakatak"  #TODO ENV
 IP = "161.35.154.238"   #TODO ENV
 PORT = 8089             #TODO ENV
 
-SQLUSER = "root"    #TODO ENV
-SQLPASS = "mypass"  #TODO ENV
-SQLDB   = "TAKYCoT"    #TODO ENV
+SQLROOTUSER = "root"    #TODO ENV
+SQLROOTPASS = "mypass"  #TODO ENV
+
+SQLUSER = "lookingglass"  #TODO ENV
+SQLPASS = "V42Lm4j9"      #TODO ENV
+SQLDB   = "TAKYCoT"       #TODO ENV
 
 SCRT = certutil.CERT_PATH + "/server.crt"
 CCRT = certutil.BOT_CERT_PATH + "/taky-connect.crt"
 CKEY = certutil.BOT_CERT_PATH + "/taky-connect.key"
 
 def getCOT(socket, queue):
-  print('[+] Thread started, waiting on CoTs...')
+  print('[+] Producer Thread started, waiting on CoTs...')
 
   while(True):
-
     rawcot = socket.recv()
-    #queue.put(rawcot)
+    queue.put(rawcot)
     
-    # Below should be moved to another function
-    # as the following doesnt really pertain to the getCOT producer thread
-    cot = xmltodict.parse(rawcot)
-    print(cot)
-    
-    if ('a-f-G-U-C' in cot['event']['@type']):
-      detail = cot['event']['detail']
-      
-      time = cot['event']['@time']
-      callsign = detail['contact']['@callsign']
-      group = detail['__group']['@name']
-      role = detail['__group']['@role']
-      coords = cot['event']['point']
-
-      log = '{} | {} | {} | {} | {} | {}'.format(time, callsign, group, role, coords['@lat'], coords['@lon'])
-      print(log)
-
 
 def sql_configure(conn):
   cursor = conn.cursor()
@@ -65,6 +51,53 @@ def sql_configure(conn):
   conn.commit()
   return
 
+
+def postCOT(sql, queue):
+  print('[+] Consumer Thread started, waiting on queued CoTs...')
+  sql_insert = "INSERT INTO `cots` (`time`, `callsign`, `cot_group`, `role`, `lat`, `lon`) VALUES (%s, %s, %s, %s, %s, %s)"
+
+  cursor = sql.cursor()
+  while (True):
+    if not queue.empty():
+      row = queue.get()
+      cot = parse_cot(row)
+
+      cursor.execute(sql_insert, (cot['time'], cot['callsign'], cot['tak_color'], cot['tak_role'], cot['lat'], cot['lon']))
+      sql.commit()
+
+      print(cot)
+  
+
+def parse_cot(rawcot):
+  dict_cot = xmltodict.parse(rawcot)
+  print(dict_cot)
+  
+  if ('a-f-G-U-C' in dict_cot['event']['@type']):
+    detail = dict_cot['event']['detail']
+    
+    time = dict_cot['event']['@time']
+    callsign = detail['contact']['@callsign']
+    color = detail['__group']['@name']
+    role = detail['__group']['@role']
+    coords = dict_cot['event']['point']
+
+    utc_time = time.replace("Z","UTC")
+    utc_dt = datetime.strptime(utc_time, "%Y-%m-%dT%H:%M:%S.%f%Z")
+    #YYYY-MM-DD hh:mm:ss
+    cot = {
+      "time": time.strip("Z"),
+      "callsign": callsign,
+      "tak_color": color,
+      "tak_role": role,
+      "lat": coords['@lat'],
+      "lon": coords['@lon'],
+    }
+
+    log = '{} | {} | {} | {} | {} | {}'.format(time, callsign, color, role, coords['@lat'], coords['@lon'])
+    print(log)
+  return cot
+
+
 def main():
   queue = Queue()
   certutil.build_certs(cert_pass)
@@ -77,11 +110,15 @@ def main():
     producer = Thread(target=getCOT, args=(sock_ssl, queue))
     producer.start()
 
+  sql_root = pymysql.connect(host='10.0.40.6', user=SQLROOTUSER, password=SQLROOTPASS, db=SQLDB, cursorclass=pymysql.cursors.DictCursor)
+  if sql_root.open:
+    sql_configure(sql_root)
+    sql_root.close()
 
-
-  sql = pymysql.connect(host='localhost', user=SQLUSER, password=SQLPASS, db=SQLDB, cursorclass=pymysql.cursors.DictCursor)
+  sql = pymysql.connect(host='10.0.40.6', user=SQLUSER, password=SQLPASS, db=SQLDB, cursorclass=pymysql.cursors.DictCursor) 
   if sql.open:
-    sql_configure(sql)
-    
+    consumer = Thread(target=postCOT, args=(sql, queue))
+    consumer.start()
+
 if __name__ == '__main__':
   main()

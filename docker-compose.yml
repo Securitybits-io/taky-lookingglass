@@ -1,11 +1,18 @@
-version: '2.1'
+version: "2.1"
 services:
-  taky-db:
-    container_name: taky-db
-    image: mariadb
-    ports: 
-      - 3306:3306
+  mariadb:
+    image: linuxserver/mariadb:latest
+    container_name: mariadb
     environment:
-      - MARIADB_ROOT_PASSWORD=mypass
-      - MARIADB_DATABASE=TAKYCoT
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - MYSQL_ROOT_PASSWORD=mypass
+      - MYSQL_DATABASE=TAKYCoT
+      - MYSQL_USER=lookingglass
+      - MYSQL_PASSWORD=V42Lm4j9
+    volumes:
+      - /docker/config/mariadb:/config
+    ports:
+      - 3306:3306
     restart: unless-stopped
