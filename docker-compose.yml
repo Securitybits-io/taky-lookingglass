@@ -24,7 +24,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - /docker/data/taky-data:/data
-    require:
+    depends_on:
       - git-checkout
       - mariadb
       - grafana
@@ -45,7 +45,7 @@ services:
       - /docker/config/mariadb:/config
     ports:
       - 3306:3306
-    require:
+    depends_on:
       - git-checkout
     restart: unless-stopped
 
@@ -67,7 +67,7 @@ services:
         - grafana:/var/lib/grafana
       ports:
         - 3000:3000
-      require:
+      depends_on:
         - git-checkout
       restart: unless-stopped
 
