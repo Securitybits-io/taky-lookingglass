@@ -1,0 +1,9 @@
+apiVersion: 1
+
+datasources:
+  - name: MySQL
+    type: mysql
+    url: taky-db:3306
+    database: TAKYCoT
+    user: grafana
+    password: 9AUZaNACtnc2TFcDups8euUy

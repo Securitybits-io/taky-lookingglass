@@ -1,18 +1,75 @@
 version: "2.1"
 services:
+  git-checkout:
+    container_name: git-checkout-takydb
+    image: bitnami/git:latest
+    working_dir: /temp
+    command: >
+      bash -c "
+        find /temp -mindepth 1 -delete && 
+        git clone https://github.com/Securitybits-io/taky-lookingglass.git &&
+        cp -R ./taky-lookingglass/grafana/provisioning/* /docker/conf/ 
+      "
+    volumes:
+      - /docker:/docker
+
+  taky-lookingglass: #TODO
+    image: securitybits/taky-lookingglass
+    container_name: taky-lookingglass
+    environment:
+      - IP=${IP}
+      - MYSQL_HOST=taky-db
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - /docker/data/taky-data:/data
+    require:
+      - git-checkout
+      - mariadb
+      - grafana
+    restart: unless-stopped
+
   mariadb:
     image: linuxserver/mariadb:latest
-    container_name: mariadb
+    container_name: taky-db
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      - MYSQL_ROOT_PASSWORD=mypass
       - MYSQL_DATABASE=TAKYCoT
-      - MYSQL_USER=lookingglass
-      - MYSQL_PASSWORD=V42Lm4j9
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - /docker/config/mariadb:/config
     ports:
       - 3306:3306
+    require:
+      - git-checkout
     restart: unless-stopped
+
+    grafana:
+      image:
+      container_name: taky-grafana
+      environment:
+        - GF_SERVER_PROTOCOL="http"
+        - GF_SERVER_DOMAIN=${GF_SERVER_DOMAIN}
+        - GF_SERVER_ROOT_URL=http://${GF_SERVER_DOMAIN}
+        - GF_ANALYTICS_REPORTING_ENABLED=false
+        - GF_SECURITY_ADMIN_USER=${GF_ADMIN_USER}
+        - GF_SECURITY_ADMIN_PASSWORD=${GF_ADMIN_PASSWORD}
+        - GF_ALLOW_SIGN_UP=false
+        - GF_DEFAULT_THEME=dark
+        - GF_INSTALL_PLUGINS=grafana-worldmap-panel
+      volumes:
+        - /docker/conf/grafana/provisioning:/etc/grafana/provisioning
+        - grafana:/var/lib/grafana
+      ports:
+        - 3000:3000
+      require:
+        - git-checkout
+      restart: unless-stopped
+
+volumes:
+  grafana:

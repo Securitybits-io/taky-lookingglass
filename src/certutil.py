@@ -6,10 +6,8 @@ from time import sleep
 from OpenSSL import crypto
 
 #TODO Change to the Docker paths
-#BOT_CERT_PATH = "/home/christoffer/Documents/Development/taky-lookingglass/ssl"
-#CERT_PATH = "/home/christoffer/Documents/Development/taky-lookingglass/certs"
-BOT_CERT_PATH = "/mnt/d/Development/taky-lookingglass/ssl"
-CERT_PATH = "/mnt/d/Development/taky-lookingglass/certs"
+BOT_CERT_PATH = "/data/taky-bot/certs"
+CERT_PATH = "/data/ssl"
 HOSTNAME = "taky-connect"
 
 def make_cert(path, f_name, hostname, cert_pw, cert_auth, n_years=10, dump_pem=False):

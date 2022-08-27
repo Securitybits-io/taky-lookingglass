@@ -1,0 +1,414 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 2,
+  "iteration": 1661624797436,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "panels": [],
+      "title": "Row title",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "m5b-BXmVz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [
+            {
+              "options": {
+                "Blue": {
+                  "color": "#0000ff",
+                  "index": 8
+                },
+                "Brown": {
+                  "color": "#804000",
+                  "index": 13
+                },
+                "Cyan": {
+                  "color": "#00ffff",
+                  "index": 9
+                },
+                "Dark Blue": {
+                  "color": "#00008b",
+                  "index": 7
+                },
+                "Dark Green": {
+                  "color": "#006400",
+                  "index": 12
+                },
+                "Green": {
+                  "color": "#00ff00",
+                  "index": 11
+                },
+                "Magenta": {
+                  "color": "#ff00ff",
+                  "index": 3
+                },
+                "Maroon": {
+                  "color": "#800000",
+                  "index": 5
+                },
+                "Orange": {
+                  "color": "orange",
+                  "index": 2
+                },
+                "Purple": {
+                  "color": "#800080",
+                  "index": 6
+                },
+                "Red": {
+                  "color": "semi-dark-red",
+                  "index": 4
+                },
+                "Teal": {
+                  "color": "#008080",
+                  "index": 10
+                },
+                "White": {
+                  "color": "text",
+                  "index": 0
+                },
+                "Yellow": {
+                  "color": "yellow",
+                  "index": 1
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 33,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 2,
+      "options": {
+        "basemap": {
+          "config": {},
+          "name": "Layer 0",
+          "type": "default"
+        },
+        "controls": {
+          "mouseWheelZoom": true,
+          "showAttribution": true,
+          "showDebug": true,
+          "showScale": true,
+          "showZoom": true
+        },
+        "layers": [
+          {
+            "config": {
+              "showLegend": true,
+              "style": {
+                "color": {
+                  "field": "color",
+                  "fixed": "dark-green"
+                },
+                "opacity": 0.4,
+                "rotation": {
+                  "fixed": 0,
+                  "max": 360,
+                  "min": -360,
+                  "mode": "mod"
+                },
+                "size": {
+                  "fixed": 4,
+                  "max": 15,
+                  "min": 2
+                },
+                "symbol": {
+                  "field": "",
+                  "fixed": "img/icons/marker/cross.svg",
+                  "mode": "fixed"
+                },
+                "text": {
+                  "field": "callsign",
+                  "fixed": "",
+                  "mode": "field"
+                },
+                "textConfig": {
+                  "fontSize": 12,
+                  "offsetX": 6,
+                  "offsetY": 2,
+                  "textAlign": "left",
+                  "textBaseline": "middle"
+                }
+              }
+            },
+            "filterData": {
+              "id": "byRefId",
+              "options": "A"
+            },
+            "location": {
+              "latitude": "latitude",
+              "longitude": "longitude",
+              "mode": "coords"
+            },
+            "name": "Layer 1",
+            "opacity": 1,
+            "tooltip": true,
+            "type": "markers"
+          }
+        ],
+        "tooltip": {
+          "mode": "details"
+        },
+        "view": {
+          "id": "coords",
+          "lat": 63.078191,
+          "lon": 19.919936,
+          "zoom": 4.72
+        }
+      },
+      "pluginVersion": "9.1.0-70662pre",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "m5b-BXmVz"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  time AS \"time\",\r\n  lat AS \"latitude\",\r\n  lon AS \"longitude\",\r\n  callsign AS \"callsign\",\r\n  role AS \"role\",\r\n  cot_group AS \"color\"\r\nFROM cots\r\nWHERE callsign=$Callsign\r\n  AND role=$Role\r\n  AND cot_group=$Color\r\n  AND $__timeFilter(time)\r\nORDER BY time",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "lat"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "latitude"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "lon"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "longitude"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "callsign"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "callsign"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "role"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "role"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "cot_group"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "color"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "cots",
+          "timeColumn": "time",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Historical Locations",
+      "type": "geomap"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": "callsign",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "mysql",
+          "uid": "m5b-BXmVz"
+        },
+        "definition": "select callsign AS callsign from cots",
+        "hide": 0,
+        "includeAll": true,
+        "label": "",
+        "multi": false,
+        "name": "Callsign",
+        "options": [],
+        "query": "select callsign AS callsign from cots",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": "role",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "mysql",
+          "uid": "m5b-BXmVz"
+        },
+        "definition": "select role as Role from cots",
+        "hide": 0,
+        "includeAll": true,
+        "multi": false,
+        "name": "Role",
+        "options": [],
+        "query": "select role as Role from cots",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": "cot_group",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "mysql",
+          "uid": "m5b-BXmVz"
+        },
+        "definition": "select cot_group FROM cots",
+        "hide": 0,
+        "includeAll": true,
+        "multi": false,
+        "name": "Color",
+        "options": [],
+        "query": "select cot_group FROM cots",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "TAKY Database",
+  "uid": "G8p6lbZ4z",
+  "version": 15,
+  "weekStart": ""
+}

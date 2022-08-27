@@ -2,27 +2,27 @@
 
 import os
 import socket
-from sqlite3 import SQLITE_DROP_TABLE
 import pymysql
 import ssl
 import xmltodict
 import certutil
 
+from time import sleep
 from datetime import datetime
 from queue import Queue
 from threading import Thread
-from xml.etree import cElementTree as ElementTree
 
-cert_pass = "atakatak"  #TODO ENV
-IP = "161.35.154.238"   #TODO ENV
-PORT = 8089             #TODO ENV
+cert_pass = os.getenv("CERT_PASS", default="atakatak")
+IP = os.getenv("IP")
+PORT = os.getenv("PORT", default=8089)
 
-SQLROOTUSER = "root"    #TODO ENV
-SQLROOTPASS = "mypass"  #TODO ENV
+SQLROOTUSER = "root"
+SQLROOTPASS = os.getenv("MYSQL_ROOT_PASSWORD")
 
-SQLUSER = "lookingglass"  #TODO ENV
-SQLPASS = "V42Lm4j9"      #TODO ENV
-SQLDB   = "TAKYCoT"       #TODO ENV
+SQLHOST = os.getenv("MYSQL_HOST")
+SQLUSER = os.getenv("MYSQL_USER")
+SQLPASS = os.getenv("MYSQL_PASSWORD")
+SQLDB   = "TAKYCoT"
 
 SCRT = certutil.CERT_PATH + "/server.crt"
 CCRT = certutil.BOT_CERT_PATH + "/taky-connect.crt"
@@ -44,7 +44,7 @@ def sql_configure(conn):
   conn.commit()
   
   print('[+] Create Grafana Read-Only User if not exist...')
-  cursor.execute('GRANT SELECT ON TAKYCoT.* to "grafana" IDENTIFIED BY "password123";')
+  cursor.execute('GRANT SELECT ON TAKYCoT.* to "grafana" IDENTIFIED BY "9AUZaNACtnc2TFcDups8euUy";')
   conn.commit()
 
   cursor.execute('FLUSH PRIVILEGES;')
@@ -58,19 +58,22 @@ def postCOT(sql, queue):
 
   cursor = sql.cursor()
   while (True):
-    if not queue.empty():
+    if queue.empty():
+      sleep(5)
+    else:
       row = queue.get()
       cot = parse_cot(row)
 
       cursor.execute(sql_insert, (cot['time'], cot['callsign'], cot['tak_color'], cot['tak_role'], cot['lat'], cot['lon']))
       sql.commit()
 
-      print(cot)
-  
+      sleep(0.5)
+      #print(cot)
+
 
 def parse_cot(rawcot):
   dict_cot = xmltodict.parse(rawcot)
-  print(dict_cot)
+  #print(dict_cot)
   
   if ('a-f-G-U-C' in dict_cot['event']['@type']):
     detail = dict_cot['event']['detail']
@@ -110,12 +113,12 @@ def main():
     producer = Thread(target=getCOT, args=(sock_ssl, queue))
     producer.start()
 
-  sql_root = pymysql.connect(host='10.0.40.6', user=SQLROOTUSER, password=SQLROOTPASS, db=SQLDB, cursorclass=pymysql.cursors.DictCursor)
+  sql_root = pymysql.connect(host=SQLHOST, user=SQLROOTUSER, password=SQLROOTPASS, db=SQLDB, cursorclass=pymysql.cursors.DictCursor)
   if sql_root.open:
     sql_configure(sql_root)
     sql_root.close()
 
-  sql = pymysql.connect(host='10.0.40.6', user=SQLUSER, password=SQLPASS, db=SQLDB, cursorclass=pymysql.cursors.DictCursor) 
+  sql = pymysql.connect(host=SQLHOST, user=SQLUSER, password=SQLPASS, db=SQLDB, cursorclass=pymysql.cursors.DictCursor) 
   if sql.open:
     consumer = Thread(target=postCOT, args=(sql, queue))
     consumer.start()
