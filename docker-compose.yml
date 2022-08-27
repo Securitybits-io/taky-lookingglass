@@ -50,7 +50,7 @@ services:
     restart: unless-stopped
 
   grafana:
-    image:
+    image: grafana/grafana:main
     container_name: taky-grafana
     environment:
       - GF_SERVER_PROTOCOL="http"
