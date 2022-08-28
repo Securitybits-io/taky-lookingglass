@@ -77,7 +77,9 @@ def postCOT(sql, queue):
       except UnboundLocalError as e:
         logging.error('Variable is not defined: %s', e)
       except:
-        logging.error('Something went wrong')  
+        logging.error('Something went wrong')
+        logging.error('Raw Cot: %s', row)
+        logging.error('Parsed Cot: %s', cot)
       sleep(0.5)
       
 
