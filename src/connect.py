@@ -29,7 +29,7 @@ SCRT = certutil.CERT_PATH + "/server.crt"
 CCRT = certutil.BOT_CERT_PATH + "/taky-connect.crt"
 CKEY = certutil.BOT_CERT_PATH + "/taky-connect.key"
 
-LOG_LEVEL = os.getenv('LOG_LEVEL', "INFO").upper()
+LOG_LEVEL = os.getenv('LOG_LEVEL', default="INFO").upper()
 
 
 def getCOT(socket, queue):
