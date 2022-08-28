@@ -37,8 +37,17 @@ def getCOT(socket, queue):
 
   while(True):
     rawcot = socket.recv()
-    queue.put(rawcot)
+    cot = checkCOT(rawcot)
+    if !cot:
+      queue.put(cot)
     
+def checkCOT(cot):
+  for start in range(0, len(cot)):
+    if cot[start:start+6] == "<event":
+      for end in range(start, len(cot)):
+        if cot[end:end+8] == "</event>":
+          return cot[start:end+8]
+  return False
 
 def sql_configure(conn):
   cursor = conn.cursor()
@@ -114,7 +123,6 @@ def parse_cot(rawcot):
 
 
 def main():
-  print("[+] Logging Level: %s", LOG_LEVEL)
   logging.basicConfig(format='%(levelname)s:%(threadName)s:%(message)s', level=LOG_LEVEL)
 
   queue = Queue()
