@@ -66,8 +66,8 @@ def postCOT(sql, queue):
       sleep(5)
     else:
       row = queue.get()
-      cot = parse_cot(row)´
-      
+      cot = parse_cot(row)
+
       logging.debug("Raw CoT: %s", row)
       logging.debug("Parsed CoT: %s", cot)
 
