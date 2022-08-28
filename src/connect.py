@@ -77,7 +77,7 @@ def postCOT(sql, queue):
     else:
       try:
         row = queue.get()
-        rawcot = checkCOT(row)
+        rawcot = checkCOT(row.decode("utf-8"))
 
         if rawcot == False:
           logging.debug("Rawcot: %s Row: %s", rawcot, row)
