@@ -40,7 +40,7 @@ def getCOT(socket, queue):
     logging.debug("Raw Socket CoT: %s", rawcot)
     
     cot = checkCOT(rawcot)
-    logging.debug.("Raw Valid CoT: %s", cot)
+    logging.debug("Raw Valid CoT: %s", cot)
 
     if cot != False:
       parsed_cot = parse_cot(cot)
