@@ -38,14 +38,9 @@ def getCOT(socket, queue):
   while(True):
     rawcot = socket.recv()
     logging.debug("Raw Socket CoT: %s", rawcot)
-    
-    cot = checkCOT(rawcot)
-    logging.debug("Raw Valid CoT: %s", cot)
+    queue.put(rawcot)
 
-    if cot != False:
-      parsed_cot = parse_cot(cot)
-      queue.put(parsed_cot)
-    
+
 def checkCOT(cot):
   for start in range(0, len(cot)):
     if cot[start:start+6] == "<event":
@@ -53,6 +48,7 @@ def checkCOT(cot):
         if cot[end:end+8] == "</event>":
           return cot[start:end+8]
   return False
+
 
 def sql_configure(conn):
   cursor = conn.cursor()
@@ -81,13 +77,18 @@ def postCOT(sql, queue):
     else:
       try:
         row = queue.get()
-        cot = parse_cot(row)
+        rawcot = checkCOT(row)
 
-        logging.debug("Raw CoT: %s", row)
-        logging.debug("Parsed CoT: %s", cot)
+        if rawcot == False:
+          logging.debug("Rawcot: %s Row: %s", rawcot, row)
+          pass
+        else:
+          cot = parse_cot(rawcot)
+          logging.debug("Raw CoT: %s", rawcot)
+          logging.debug("Parsed CoT: %s", cot)
 
-        cursor.execute(sql_insert, (cot['time'], cot['callsign'], cot['tak_color'], cot['tak_role'], cot['lat'], cot['lon']))
-        sql.commit()
+          cursor.execute(sql_insert, (cot['time'], cot['callsign'], cot['tak_color'], cot['tak_role'], cot['lat'], cot['lon']))
+          sql.commit()
       except UnboundLocalError as e:
         logging.error("msg: %s", e)
       except:
