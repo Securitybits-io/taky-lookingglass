@@ -84,7 +84,7 @@ def postCOT(sql, queue):
         cursor.execute(sql_insert, (cot['time'], cot['callsign'], cot['tak_color'], cot['tak_role'], cot['lat'], cot['lon']))
         sql.commit()
       except UnboundLocalError as e:
-        logging.error(e)
+        logging.error("msg: %s", e)
       except:
         logging.error('Something went wrong')
         logging.error('Raw Cot: %s', row)
