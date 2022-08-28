@@ -8,7 +8,7 @@ services:
       bash -c "
         find /temp -mindepth 1 -delete && 
         git clone https://github.com/Securitybits-io/taky-lookingglass.git &&
-        cp -R ./taky-lookingglass/grafana/provisioning/* /docker/conf/ 
+        cp -R ./taky-lookingglass/grafana/* /docker/conf/grafana/
       "
     volumes:
       - /docker:/docker
@@ -42,7 +42,7 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
-      - /docker/config/mariadb:/config
+      - /docker/conf/mariadb:/config
     #ports:     #Uncomment if you want to remotely access the SQL Database
     #  - 3306:3306
     depends_on:
