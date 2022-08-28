@@ -8,7 +8,7 @@ https://github.com/Securitybits-io/taky-lookingglass
 https://hub.docker.com/r/securitybits/taky-lookingglass
 
 ## Tags
-latest is built on every code push
+`latest` - is built on every code push
 
 ## Use
 Set the environment variables according to your setup, it is somewhat aligned to be used with the same variables as skadakar\taky-docker
