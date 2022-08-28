@@ -103,7 +103,7 @@ def parse_cot(rawcot):
     }
 
     log = '{} | {} | {} | {} | {} | {}'.format(time, callsign, color, role, coords['@lat'], coords['@lon'])
-    logging.debug("Formatted CoT: %s"log)
+    logging.debug("Formatted CoT: %s", log)
   return cot
 
 
