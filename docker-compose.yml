@@ -13,7 +13,7 @@ services:
     volumes:
       - /docker:/docker
 
-  taky-lookingglass: #TODO
+  taky-lookingglass:
     image: securitybits/taky-lookingglass
     container_name: taky-lookingglass
     environment:
@@ -43,8 +43,8 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - /docker/config/mariadb:/config
-    ports:
-      - 3306:3306
+    #ports:     #Uncomment if you want to remotely access the SQL Database
+    #  - 3306:3306
     depends_on:
       - git-checkout
     restart: unless-stopped

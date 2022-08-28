@@ -6,4 +6,9 @@ datasources:
     url: taky-db:3306
     database: TAKYCoT
     user: grafana
-    password: 9AUZaNACtnc2TFcDups8euUy
+    jsonData:
+      maxOpenConns: 0 # Grafana v5.4+
+      maxIdleConns: 2 # Grafana v5.4+
+      connMaxLifetime: 14400 # Grafana v5.4+
+    secureJsonData:
+      password: 9AUZaNACtnc2TFcDups8euUy
