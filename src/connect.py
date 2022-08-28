@@ -44,7 +44,7 @@ def getCOT(socket, queue):
 
     if cot != False:
       parsed_cot = parse_cot(cot)
-      queue.put(cot)
+      queue.put(parsed_cot)
     
 def checkCOT(cot):
   for start in range(0, len(cot)):
