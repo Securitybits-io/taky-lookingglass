@@ -38,7 +38,7 @@ def getCOT(socket, queue):
   while(True):
     rawcot = socket.recv()
     cot = checkCOT(rawcot)
-    if !cot:
+    if cot != False:
       queue.put(cot)
     
 def checkCOT(cot):
