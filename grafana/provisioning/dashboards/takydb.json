@@ -400,7 +400,7 @@
           "type": "mysql",
           "uid": "P211906C1C32DB77E"
         },
-        "definition": "SELECT callsign FROM cots",
+        "definition": "SELECT callsign FROM cots;",
         "hide": 0,
         "includeAll": true,
         "label": "",
