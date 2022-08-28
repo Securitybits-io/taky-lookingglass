@@ -65,15 +65,19 @@ def postCOT(sql, queue):
     if queue.empty():
       sleep(5)
     else:
-      row = queue.get()
-      cot = parse_cot(row)
+      try:
+        row = queue.get()
+        cot = parse_cot(row)
 
-      logging.debug("Raw CoT: %s", row)
-      logging.debug("Parsed CoT: %s", cot)
+        logging.debug("Raw CoT: %s", row)
+        logging.debug("Parsed CoT: %s", cot)
 
-      cursor.execute(sql_insert, (cot['time'], cot['callsign'], cot['tak_color'], cot['tak_role'], cot['lat'], cot['lon']))
-      sql.commit()
-
+        cursor.execute(sql_insert, (cot['time'], cot['callsign'], cot['tak_color'], cot['tak_role'], cot['lat'], cot['lon']))
+        sql.commit()
+      except UnboundLocalError as e:
+        logging.error('Variable is not defined: %s', e)
+      except:
+        logging.error('Something went wrong')  
       sleep(0.5)
       
 
